@@ -26,8 +26,8 @@ const rules = {
     ],
     password: [
         { required: true, message: "请输入密码", trigger: "blur" },
-        { min: 5, max: 16, message: "长度必须为5-16位", trigger: "change" },
-        { min: 5, max: 16, message: "长度必须为5-16位", trigger: "blur" },
+        { pattern:"^\\S{5,16}$", message: "长度必须为5-16位", trigger: "change" },
+        { pattern:"^\\S{5,16}$", message: "长度必须为5-16位", trigger: "blur" },
     ],
     rePassword: [
         // { required: true, message: "必须输入", trigger: "blur" },
