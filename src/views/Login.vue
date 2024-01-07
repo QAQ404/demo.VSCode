@@ -45,16 +45,21 @@ const register = async () => {
     ElMessage.success("注册成功");
 }
 
-import {useRouter} from "vue-router";
-const router = useRouter();
+import {useTokenStore} from '@/stores/token.js';
+const tokemStore = useTokenStore();
+
+/* import {useRouter} from "vue-router";
+const router = useRouter(); */
+import router from '@/router'
 //登录函数
 const Login = async () => {
     let result = await userLoginService(registerData.value);
     /* if (result.code === 0) alert(result.msg ? result.msg : "登录成功");
     else alert("登录失败"); */
-    console.log(result);
     // alert(result.message ? result.message : "登录成功");
     ElMessage.success("登录成功");
+    //把得到的data里的token存储到pinia中
+    tokemStore.setToken(result.data);
     //跳转到首页
     router.push("/");
 }
