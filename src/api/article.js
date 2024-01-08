@@ -19,13 +19,26 @@ const articleCategoryUpdateService = (categoryData) => {
 }
 
 const articleCategoryDeleteService = (id) => {
-    return req.delete('/category?id='+id)
+    return req.delete('/category?id=' + id)
 }
 
-const articleListService = (para)=>{
-    return req.get('/article',{params:para})  //get传参
+const articleListService = (para) => {
+    return req.get('/article', { params: para })  //get传参
+}
+
+const articleAddService = (articleData) => {
+    return req.post('/article', articleData);
+}
+
+const updateArticleService = (articleData) => {
+    return req.put('/article', articleData);
+}
+
+const deleteArticleService = (id) => {
+    return req.delete('/article?id=' + id)
 }
 export {
     ArticleCategoryListService, articleCategoryAddService, articleCategoryUpdateService
-    , articleCategoryDeleteService,articleListService
+    , articleCategoryDeleteService, articleListService, articleAddService, updateArticleService
+    , deleteArticleService
 }

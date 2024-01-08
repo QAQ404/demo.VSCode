@@ -3,9 +3,9 @@ import {
     Edit,
     Delete
 } from '@element-plus/icons-vue'
-
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
-
+const title = ref('')
 //文章分类数据模型
 const categorys = ref([
     {
@@ -74,7 +74,7 @@ const articles = ref([
 //分页条数据模型
 const pageNum = ref(1)//当前页
 const total = ref(20)//总条数
-const pageSize = ref(3)//每页条数
+const pageSize = ref(5)//每页条数
 
 //当每页条数发生了变化，调用此函数
 const onSizeChange = (size) => {
@@ -87,7 +87,7 @@ const onCurrentChange = (num) => {
     articleList();
 }
 
-import { ArticleCategoryListService, articleListService } from '@/api/article.js'
+import { ArticleCategoryListService, articleListService, articleAddService ,updateArticleService,deleteArticleService} from '@/api/article.js'
 const articleCategoryList = async () => {
     let result = await ArticleCategoryListService();
     categorys.value = result.data;
@@ -137,13 +137,75 @@ const articleModel = ref({
     state: ''
 })
 
-import {useTokenStore} from '@/stores/token.js'
+import { useTokenStore } from '@/stores/token.js'
 const tokenStore = useTokenStore();
 
 //上传成功的回调
-const uploadSuccess = (result)=>{
+const uploadSuccess = (result) => {
     articleModel.value.coverImg = result.data;
     console.log(result.data);
+}
+
+const clearDialogDrawer = () => {
+    articleModel.value.title = '';
+    articleModel.value.categoryId = '';
+    articleModel.value.coverImg = '';
+    articleModel.value.content = ' ';
+    articleModel.value.state = '';
+    console.log(articleModel.value.content);
+}
+const addArticle = async (clickStype) => {
+
+    articleModel.value.state = clickStype;
+
+    let result = await articleAddService(articleModel.value);
+    ElMessage.success(result.message ? result.message : '添加成功');
+    visibleDrawer.value = false;
+    articleList();
+}
+
+const showArticleUpdate = (row) => {
+    title.value = '编辑文章';
+    articleModel.value.title = row.title;
+    articleModel.value.categoryId = row.categoryId;
+    articleModel.value.coverImg = row.coverImg;
+    articleModel.value.content = row.content;
+    articleModel.value.state = row.state;
+    articleModel.value.id = row.id;
+    visibleDrawer.value = true;
+}
+
+const updateArticle=async (clickStype)=>{
+    articleModel.value.state = clickStype;
+    let result = await updateArticleService(articleModel.value);
+    ElMessage.success(result.message ? result.message : '添加成功');
+    visibleDrawer.value = false;
+    articleList();
+}
+const deleteArticle = (row)=>{
+    ElMessageBox.confirm(
+        '是否确认删除',
+        '温馨提示',
+        {   
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(async () => {
+            let result = await deleteArticleService(row.id);
+            ElMessage({
+                type: 'success',
+                message: '成功删除',
+            })
+            articleList();
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '取消删除',
+            })
+        })
 }
 </script>
 <template>
@@ -152,7 +214,8 @@ const uploadSuccess = (result)=>{
             <div class="header">
                 <span>文章管理</span>
                 <div class="extra">
-                    <el-button type="primary" @click="visibleDrawer = true;">添加文章</el-button>
+                    <el-button type="primary"
+                        @click="visibleDrawer = true; title = '添加文章'; clearDialogDrawer();">添加文章</el-button>
                 </div>
             </div>
         </template>
@@ -184,8 +247,8 @@ const uploadSuccess = (result)=>{
             <el-table-column label="状态" prop="state"></el-table-column>
             <el-table-column label="操作" width="100">
                 <template #default="{ row }">
-                    <el-button :icon="Edit" circle plain type="primary"></el-button>
-                    <el-button :icon="Delete" circle plain type="danger"></el-button>
+                    <el-button :icon="Edit" circle plain type="primary" @click="showArticleUpdate(row)"></el-button>
+                    <el-button :icon="Delete" circle plain type="danger" @click="deleteArticle(row)"></el-button>
                 </template>
             </el-table-column>
             <template #empty>
@@ -198,7 +261,7 @@ const uploadSuccess = (result)=>{
             @current-change="onCurrentChange" style="margin-top: 20px; justify-content: flex-end" />
 
         <!-- 抽屉 -->
-        <el-drawer v-model="visibleDrawer" title="添加文章" direction="rtl" size="50%">
+        <el-drawer v-model="visibleDrawer" :title="title" direction="rtl" size="50%">
             <!-- 添加文章表单 -->
             <el-form :model="articleModel" label-width="100px">
                 <el-form-item label="文章标题">
@@ -223,9 +286,8 @@ const uploadSuccess = (result)=>{
                         on-success: 上传成功的回调函数
                      -->
 
-                    <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false" 
-                    action="/api/upload" name="file" :headers="{'Authorization':tokenStore.token}"
-                    :on-success="uploadSuccess"> 
+                    <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false" action="/api/upload"
+                        name="file" :headers="{ 'Authorization': tokenStore.token }" :on-success="uploadSuccess">
                         <img v-if="articleModel.coverImg" :src="articleModel.coverImg" class="avatar" />
                         <el-icon v-else class="avatar-uploader-icon">
                             <Plus />
@@ -239,8 +301,8 @@ const uploadSuccess = (result)=>{
                     </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary">发布</el-button>
-                    <el-button type="info">草稿</el-button>
+                    <el-button type="primary" @click="title=='添加文章'?addArticle('已发布'):updateArticle('已发布')">发布</el-button>
+                    <el-button type="info" @click="title=='添加文章'?addArticle('草稿'):updateArticle('草稿')">草稿</el-button>
                 </el-form-item>
             </el-form>
         </el-drawer>

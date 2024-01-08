@@ -17,5 +17,25 @@ const userLoginService = (loginData) => {
     return reques.post("/user/login", params);
 }
 
+const userInfoService = () => {
+    return reques.get('/user/userInfo');
+}
 
-export { userRegisterService, userLoginService }
+const exitService = () => {
+    return reques.get('/user/exit')
+}
+
+const updateUserInfoService = (userData) => {
+    return reques.put('/user/update', userData)
+}
+
+const userAvatarUpdateService = (url) => {
+    const params = new URLSearchParams();
+    params.append('avatarUrl',url);
+    return reques.patch('/user/updateAvatar',params)
+}
+
+export {
+    userRegisterService, userLoginService, userInfoService, exitService, updateUserInfoService
+    , userAvatarUpdateService
+}
