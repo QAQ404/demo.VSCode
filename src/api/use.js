@@ -35,7 +35,11 @@ const userAvatarUpdateService = (url) => {
     return reques.patch('/user/updateAvatar',params)
 }
 
+
+const updatePasswordService=(Data)=>{
+    return reques.patch('/user/updatePwd',Data)
+}
 export {
     userRegisterService, userLoginService, userInfoService, exitService, updateUserInfoService
-    , userAvatarUpdateService
+    , userAvatarUpdateService,updatePasswordService
 }
