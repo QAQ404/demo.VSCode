@@ -13,7 +13,7 @@ const routes = [
     {
         path: '/',
         component: LayoutVue,
-        redirect:"/article/manage",
+        redirect:"/login",
         children:[
             {path:"/article/category",component:ArticleCategoryVue},
             {path:"/article/manage",component:ArticleManageVue},

@@ -21,7 +21,11 @@ const articleCategoryUpdateService = (categoryData) => {
 const articleCategoryDeleteService = (id) => {
     return req.delete('/category?id='+id)
 }
+
+const articleListService = (para)=>{
+    return req.get('/article',{params:para})  //get传参
+}
 export {
     ArticleCategoryListService, articleCategoryAddService, articleCategoryUpdateService
-    , articleCategoryDeleteService
+    , articleCategoryDeleteService,articleListService
 }

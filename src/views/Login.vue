@@ -61,7 +61,7 @@ const Login = async () => {
     //把得到的data里的token存储到pinia中
     tokemStore.setToken(result.data);
     //跳转到首页
-    router.push("/");
+    router.push("/article/manage");
 }
 
 const clearRegisterData = () => {
