@@ -7,7 +7,7 @@ const useUserInfoStroe = defineStore('userInfo', () => {
         info.value = newInfo;
     }
     const removeInfo = () => {
-        info.value = {}
+        info.value = {} 
     }
     return {
         info, setInfo, removeInfo
