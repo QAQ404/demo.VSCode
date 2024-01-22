@@ -119,7 +119,7 @@ const deleteCategory = (row) => {
         <template #header>
             <div class="header">
                 <span>文章分类</span>
-                <div class="extra">
+                <div>
                     <el-button type="primary" @click="dialogVisible = true; title = '添加分类'">添加分类</el-button>
                 </div>
             </div>

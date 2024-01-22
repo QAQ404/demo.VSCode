@@ -241,6 +241,7 @@ const deleteArticle = (row)=>{
         </el-form>
         <!-- 文章列表 -->
         <el-table :data="articles" style="width: 100%">
+            
             <el-table-column label="文章标题" width="400" prop="title"></el-table-column>
             <el-table-column label="分类" prop="categoryName"></el-table-column>
             <el-table-column label="发表时间" prop="createTime"> </el-table-column>

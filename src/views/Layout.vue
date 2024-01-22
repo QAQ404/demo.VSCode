@@ -9,13 +9,13 @@ import {
     SwitchButton,
     CaretBottom
 } from '@element-plus/icons-vue'
-import { ElMessage ,ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import avatar from '@/assets/default.png'
-import { userInfoService ,exitService} from '@/api/use.js'
+import { userInfoService, exitService } from '@/api/use.js'
 
-import {useTokenStore} from '@/stores/token.js';
+import { useTokenStore } from '@/stores/token.js';
 const tokemStore = useTokenStore();
-import {useUserInfoStroe} from '@/stores/userInfo.js'
+import { useUserInfoStroe } from '@/stores/userInfo.js'
 const userInfoStore = useUserInfoStroe();
 
 const getUserInfo = async () => {
@@ -24,42 +24,42 @@ const getUserInfo = async () => {
 }
 getUserInfo();
 
-import router from '@/router' 
+import router from '@/router'
 //条目别点击后调用的函数
-const handleCommand = (command)=>{
+const handleCommand = (command) => {
 
-    if(command==='logout'){ //推出登录
+    if (command === 'logout') { //推出登录
         ElMessageBox.confirm(
-        '是否确认退出',
-        '退出登录',
-        {   
-            confirmButtonText: '退出',
-            cancelButtonText: '取消',
-            type: 'warning',
-        }
-    )
-        .then( async () => {
-            //后端退出
-            let result = await exitService();
-            //清空pinia和token
-            tokemStore.removeToken();
-            userInfoStore.removeInfo();
+            '是否确认退出',
+            '退出登录',
+            {
+                confirmButtonText: '退出',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }
+        )
+            .then(async () => {
+                //后端退出
+                let result = await exitService();
+                //清空pinia和token
+                tokemStore.removeToken();
+                userInfoStore.removeInfo();
 
-            ElMessage({
-                type: 'success',
-                message: '退出登录',
+                ElMessage({
+                    type: 'success',
+                    message: '退出登录',
+                })
+                router.push('/');
             })
-            router.push('/');
-        })
-        .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: '取消退出',
+            .catch(() => {
+                ElMessage({
+                    type: 'info',
+                    message: '取消退出',
+                })
             })
-        })
-    }else{
+    } else {
         //路由
-        router.push('/user/'+command);
+        router.push('/user/' + command);
     }
 }
 </script>
@@ -115,11 +115,11 @@ const handleCommand = (command)=>{
         <el-container>
             <!-- 头部区域 -->
             <el-header>
-                <div>欢迎您！<strong>{{userInfoStore.info.nickname}}</strong></div>
+                <div>欢迎您！<strong>{{ userInfoStore.info.nickname }}</strong></div>
                 <!-- command:条目被点击后会触发，在事件函数上可以声明一个参数，接受条目对应的指令 -->
                 <el-dropdown placement="bottom-end" @command="handleCommand">
                     <span class="el-dropdown__box">
-                        <el-avatar :src="userInfoStore.info.userPic?userInfoStore.info.userPic:avatar" />
+                        <el-avatar :src="userInfoStore.info.userPic ? userInfoStore.info.userPic : avatar" />
                         <el-icon>
                             <CaretBottom />
                         </el-icon>
